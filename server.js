@@ -38,6 +38,7 @@ app.get("/", (req, res) => {
   db.select("*")
     .from("users")
     .then((users) => res.send(users));
+  res.json("hello from API");
 });
 
 app.post("/signin", (req, res) => signIn.handleSignIn(req, res, db, bcrypt));
