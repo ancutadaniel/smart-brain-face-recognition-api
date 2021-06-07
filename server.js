@@ -8,6 +8,9 @@ const signIn = require("./controllers/signIn");
 const profile = require("./controllers/profile");
 const image = require("./controllers/image");
 
+const PORT = 3000;
+const app = express();
+
 // Database connection
 const db = knex({
   client: "pg",
@@ -17,26 +20,12 @@ const db = knex({
   },
 });
 
-// Test connection
-// db.select("*")
-//   .from("users")
-//   .then((data) => {
-//     console.log(data);
-//   });
-
-const PORT = 3000;
-
-const app = express();
-
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  db.select("*")
-    .from("users")
-    .then((users) => res.send(users));
-  res.json("hello from API");
+  res.json("Server running");
 });
 
 app.post("/signin", (req, res) => signIn.handleSignIn(req, res, db, bcrypt));
