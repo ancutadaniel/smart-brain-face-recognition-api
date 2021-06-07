@@ -10,30 +10,33 @@ const handleRegister = (req, res, db, bcrypt) => {
 
   db.transaction((trx) => {
     // trx - transaction
-    trx
-      .insert({
-        hash: hash,
-        email: email,
-      })
-      .into("login")
-      .returning("email")
-      .then((loginEmail) => {
-        return trx("users")
-          .returning("*") // after insert return
-          .insert({
-            email: loginEmail[0],
-            name: name,
-            joined: new Date(),
-          })
-          .then((user) => {
-            res.status(201).json(user[0]);
-          })
-          .catch((err) => res.status(400).json("Error to register"));
-      })
-      .then(trx.commit)
-      .catch(trx.rollback);
+    try {
+      trx
+        .insert({
+          hash: hash,
+          email: email,
+        })
+        .into("login")
+        .returning("email")
+        .then((loginEmail) => {
+          return trx("users")
+            .returning("*") // after insert return
+            .insert({
+              email: loginEmail[0],
+              name: name,
+              joined: new Date(),
+            })
+            .then((user) => {
+              res.status(201).json(user[0]);
+            })
+            .catch((err) => res.status(400).json("Error to register"));
+        })
+        .then(trx.commit)
+        .catch(trx.rollback);
+    } catch {
+      res.status(400).json("Unable to register.");
+    }
   });
-  // .catch((err) => res.status(400).json("Unable to register."));
 };
 
 module.exports = { handleRegister };
