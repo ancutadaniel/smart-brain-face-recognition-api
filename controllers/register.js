@@ -28,11 +28,7 @@ const handleRegister = (req, res, db, bcrypt) => {
           .then((user) => {
             res.status(201).json(user[0]);
           })
-          .catch((err) =>
-            res
-              .status(400)
-              .json("Unable to register, this user is already used.")
-          );
+          .catch((err) => res.status(400).json("Unable to register"));
       })
       .then(trx.commit)
       .catch(trx.rollback);
